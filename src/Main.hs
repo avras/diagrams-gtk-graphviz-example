@@ -26,7 +26,7 @@ hex = mkGraph [0..19]
          ++ [ (2,18,()), (2,19,()), (15,18,()), (15,19,()), (18,3,()), (19,3,()) ]
         )
 
-scaleFactor = 2.5 :: Double
+padFactor = 1.2 :: Double
 
 main = do
   let params :: GraphvizParams Int v e () v
@@ -48,8 +48,7 @@ main = do
     GRC.liftIO $ putStrLn "Drawing widget"
     w <- GRC.liftIO $ fromIntegral <$> widgetGetAllocatedWidth da
     h <- GRC.liftIO $ fromIntegral <$> widgetGetAllocatedHeight da
-    GRC.translate (w/2) (h/2)
-    GRC.scale (w/scaleFactor) (h/scaleFactor)
+    GRC.scale w h
     diagram2render $ hexDrawing
     return True
 
@@ -63,4 +62,4 @@ main = do
 
 diagram2render :: Diagram B -> Render ()
 diagram2render d =
-  snd $ renderDia Cairo (CairoOptions "" (mkWidth 2) RenderOnly False) $ d # lw 0.005
+  snd $ renderDia Cairo (CairoOptions "" (dims2D 1.0 1.0) RenderOnly False) $ d # lw 0.005 # padX padFactor # padY padFactor
